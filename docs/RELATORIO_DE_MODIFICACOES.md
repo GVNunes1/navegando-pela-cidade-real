@@ -2,7 +2,7 @@
 
 **Projeto:** Navegando pela Cidade Real — Rotas de ônibus por marcos urbanos  
 **Origem:** repositório de Marcos Silveira, importado com histórico Git  
-**Versão documentada:** 0.2.1  
+**Versão documentada:** 0.2.1
 **Data:** 29/09/2026  
 **Objetivo:** permitir hospedagem do aplicativo Django na Vercel com persistência no PostgreSQL do Supabase.
 
