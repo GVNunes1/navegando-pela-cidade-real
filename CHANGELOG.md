@@ -1,5 +1,12 @@
 # Histórico de versões
 
+## 0.2.2 — 29/09/2026 — Banco inicializado e fluxo público validado
+
+- Criadas as tabelas Django e carregados os dados iniciais no Supabase.
+- Ajustadas as sequências de IDs e confirmado o isolamento RLS das tabelas expostas.
+- Busca pública validada na Vercel com destino, marco, parada e linha de ônibus.
+- Evidências registradas em `docs/RELATORIO_DE_IMPLANTACAO.md`.
+
 ## 0.2.1 — 29/09/2026 — Correção do build na Vercel
 
 - Removida a exceção de importação de `settings.py` quando as variáveis de produção ainda não foram informadas.

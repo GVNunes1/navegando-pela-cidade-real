@@ -6,6 +6,8 @@ Aplicação Django para buscar locais de Boituva e identificar o marco urbano e 
 
 Este repositório foi importado do [projeto de Marcos Silveira](https://github.com/marcosilveira2/Navegando-pela-Cidade-Real-Rotas-de-nibus-por-Marcos-Urbanos). A adaptação para hospedagem e o histórico de mudanças estão em [CHANGELOG.md](CHANGELOG.md) e [docs/RELATORIO_DE_MODIFICACOES.md](docs/RELATORIO_DE_MODIFICACOES.md).
 
+O primeiro deploy público e a carga inicial do Supabase foram verificados em [docs/RELATORIO_DE_IMPLANTACAO.md](docs/RELATORIO_DE_IMPLANTACAO.md).
+
 ## Desenvolvimento local
 
 Requer Python 3.11 ou superior. No Windows:
