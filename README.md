@@ -25,7 +25,7 @@ Sem `DATABASE_URL`, o projeto usa SQLite local. A aplicação fica em `http://12
 
 O projeto Supabase **Navegando pela Cidade Real** está na organização **Projetos Integradores**. O PostGIS foi ativado no esquema `extensions`; a versão hospedada usa as colunas `latitude`/`longitude` e calcula distâncias em Python para evitar a dependência de GEOS/GDAL no runtime da Vercel.
 
-No painel do Supabase, abra **Connect** e copie a URI PostgreSQL do pooler. Use essa URI como `DATABASE_URL` em um `.env` local, execute uma vez `python manage.py migrate` e `python manage.py seed_data`. Essas operações criam as tabelas do Django e importam os JSON. O comando de importação pode ser repetido sem duplicar registros. Não coloque a URI ou senha no Git.
+No painel do Supabase, abra **Connect** e copie a URI PostgreSQL do **Transaction pooler** (porta 6543), adequado a aplicações serverless. Use essa URI como `DATABASE_URL` em um `.env` local, execute uma vez `python manage.py migrate` e `python manage.py seed_data`. Essas operações criam as tabelas do Django e importam os JSON. O comando de importação pode ser repetido sem duplicar registros. O Psycopg está configurado sem prepared statements para ser compatível com esse pooler. Não coloque a URI ou senha no Git.
 
 ## Vercel
 

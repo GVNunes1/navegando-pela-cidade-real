@@ -63,6 +63,9 @@ DATABASES = {
         ssl_require=bool(DATABASE_URL),
     )
 }
+if DATABASE_URL and DATABASES["default"]["ENGINE"] == "django.db.backends.postgresql":
+    # O pooler transacional do Supabase (porta 6543) não aceita prepared statements.
+    DATABASES["default"].setdefault("OPTIONS", {})["prepare_threshold"] = None
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},

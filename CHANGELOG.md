@@ -3,6 +3,7 @@
 ## 0.2.0 — 29/09/2026 — Preparação para Supabase e Vercel
 
 - Substituído o banco MariaDB local por conexão PostgreSQL via `DATABASE_URL`, com SQLite para desenvolvimento.
+- Desativados prepared statements do Psycopg para o pooler transacional do Supabase.
 - Removida a dependência de GEOS/GDAL e convertido o armazenamento de coordenadas para latitude/longitude.
 - Corrigido o cálculo de proximidade para distância em metros por Haversine.
 - Criado comando `seed_data` idempotente para importar os quatro conjuntos JSON.

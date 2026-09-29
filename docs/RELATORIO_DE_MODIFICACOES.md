@@ -15,6 +15,7 @@ A versão importada usava GeoDjango, MariaDB local e caminhos de arquivo depende
 | Área | Antes | Depois | Justificativa |
 |---|---|---|---|
 | Persistência | MariaDB em `127.0.0.1` | PostgreSQL por `DATABASE_URL`; SQLite local | Permitir banco gerenciado Supabase e desenvolvimento simples |
+| Pool de conexões | Sem configuração para serverless | Pooler transacional Supabase e prepared statements desativados | Evitar conflito de sessões no servidor da Vercel |
 | Coordenadas | `PointField` GeoDjango | `latitude` e `longitude` numéricos | Evitar dependências nativas GEOS/GDAL na Vercel |
 | Proximidade | Operações espaciais e conversão Web Mercator | Fórmula de Haversine em metros | Calcular distância geodésica sem distorção da projeção Mercator |
 | Importação | Views GET públicas | Comando `manage.py seed_data` | Restringir alterações de dados à administração |
