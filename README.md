@@ -1,61 +1,51 @@
-# 🏛️ Boituva Landmarks
-Navegando-pela-Cidade-Real-Rotas-de-Ônibus-por-Marcos-Urbanos
+# Navegando pela Cidade Real
 
-Este é um projeto desenvolvido em Django para mapear e gerenciar os Marcos Urbanos de Boituva. O projeto utiliza Docker para facilitar o ambiente de desenvolvimento entre a equipe.
+Aplicação Django para buscar locais de Boituva e identificar o marco urbano e a parada de ônibus mais próximos, incluindo as linhas disponíveis na parada.
 
-## 🚀 Como Rodar o Projeto Localmente
+## Origem
 
-Siga os passos abaixo para configurar e executar o projeto na sua máquina.
+Este repositório foi importado do [projeto de Marcos Silveira](https://github.com/marcosilveira2/Navegando-pela-Cidade-Real-Rotas-de-nibus-por-Marcos-Urbanos). A adaptação para hospedagem e o histórico de mudanças estão em [CHANGELOG.md](CHANGELOG.md) e [docs/RELATORIO_DE_MODIFICACOES.md](docs/RELATORIO_DE_MODIFICACOES.md).
 
-### 1. Pré-requisitos
-Você precisará ter instalado em sua máquina:
-* Git
-* Docker e Docker Compose
+## Desenvolvimento local
 
-### 2. Clonar o Repositório
-```bash
-git clone [https://github.com/seu-usuario/seu-repositorio.git](https://github.com/seu-usuario/seu-repositorio.git)
-cd seu-repositorio
+Requer Python 3.11 ou superior. No Windows:
+
+```powershell
+python -m venv .venv
+.venv\Scripts\python -m pip install -r requirements.txt
+Copy-Item .env.example .env
+.venv\Scripts\python manage.py migrate
+.venv\Scripts\python manage.py seed_data
+.venv\Scripts\python manage.py runserver
 ```
 
-### 3. Configurar as Variáveis de Ambiente
+Sem `DATABASE_URL`, o projeto usa SQLite local. A aplicação fica em `http://127.0.0.1:8000/`. Para testar: `.venv\Scripts\python manage.py test`.
 
-O projeto utiliza variáveis de ambiente para manter senhas seguras.
+## Supabase
 
-    Crie um arquivo chamado .env na raiz do projeto.
+O projeto Supabase **Navegando pela Cidade Real** está na organização **Projetos Integradores**. O PostGIS foi ativado no esquema `extensions`; a versão hospedada usa as colunas `latitude`/`longitude` e calcula distâncias em Python para evitar a dependência de GEOS/GDAL no runtime da Vercel.
 
-    Copie a estrutura abaixo e preencha com as suas senhas locais.
+No painel do Supabase, abra **Connect** e copie a URI PostgreSQL do pooler. Use essa URI como `DATABASE_URL` em um `.env` local, execute uma vez `python manage.py migrate` e `python manage.py seed_data`. Essas operações criam as tabelas do Django e importam os JSON. O comando de importação pode ser repetido sem duplicar registros. Não coloque a URI ou senha no Git.
 
-arquivo .env
+## Vercel
 
-SECRET_KEY=
-MARIADB_ROOT_PASSWORD=
-MARIADB_DATABASE=
-MARIADB_USER=
-MARIADB_PASSWORD=
+1. Importe este repositório na Vercel com a pasta raiz do projeto como **Root Directory**. A Vercel detecta o `manage.py` e o aplicativo Django.
+2. Configure as variáveis de ambiente **antes do primeiro deploy**:
+   - `DATABASE_URL`: URI PostgreSQL do pooler Supabase, com a senha.
+   - `SECRET_KEY`: chave aleatória longa gerada para esta implantação.
+   - `DEBUG=False`.
+   - `ALLOWED_HOSTS`: opcional para domínio próprio; `.vercel.app` já está permitido.
+   - `CSRF_TRUSTED_ORIGINS`: URL HTTPS do domínio próprio, se houver.
+3. Execute as migrações e a carga de dados no Supabase antes de testar a busca publicada. É possível usar o mesmo `DATABASE_URL` em uma máquina local para esses comandos.
+4. Abra a URL publicada, busque um local e confira o marco, a parada e as linhas. O painel `/admin/` exige um superusuário criado com `python manage.py createsuperuser`.
 
+O deploy não executa migrações automaticamente. Isso evita que uma requisição web modifique a estrutura do banco. Os arquivos estáticos do admin são gerados com `collectstatic` no build da Vercel.
 
+## Dados
 
-### 4. Subir os Containers (Banco de Dados e Aplicação)
+- `boituvaplaces/rotas_limpo.json`: linhas de ônibus.
+- `boituvaplaces/pontos_onibus.json`: paradas e coordenadas disponíveis.
+- `boituvaplaces/lista_de_locais_1.json`: locais pesquisáveis.
+- `boituvaplaces/pontos_turisticos.json`: marcos turísticos.
 
-Com o Docker instalado, execute o comando abaixo para baixar as imagens e iniciar o MariaDB e o Django:
-Bash
-```bash
-docker-compose up --build
-```
-
-### 5. Executar as Migrações do Banco
-
-Em um novo terminal, execute as migrações para criar as tabelas no MariaDB:
-Bash
-```bash
-docker-compose exec web python manage.py migrate
-```
-### 6. Criar Usuário Administrador (Opcional)
-
-Para acessar o painel administrativo do Django (http://localhost:8000/admin), crie um superusuário:
-Bash
-```bash
-docker-compose exec web python manage.py createsuperuser
-```
-O projeto estará disponível em: http://localhost:8000
+Paradas sem coordenadas são preservadas no banco, mas não entram no cálculo de proximidade. Distâncias são aproximações geodésicas em metros pela fórmula de Haversine.
