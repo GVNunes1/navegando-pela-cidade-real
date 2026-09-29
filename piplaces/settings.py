@@ -11,8 +11,6 @@ load_dotenv(BASE_DIR / ".env")
 
 SECRET_KEY = os.getenv("SECRET_KEY", "development-only-change-me")
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
-if os.getenv("VERCEL") and SECRET_KEY == "development-only-change-me":
-    raise RuntimeError("Configure SECRET_KEY nas variáveis de ambiente da Vercel.")
 
 ALLOWED_HOSTS = [host.strip() for host in os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1,.vercel.app").split(",") if host.strip()]
 CSRF_TRUSTED_ORIGINS = ["https://*.vercel.app"]
@@ -31,6 +29,7 @@ INSTALLED_APPS = [
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "piplaces.middleware.DeploymentConfigurationMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -53,8 +52,6 @@ TEMPLATES = [{
 WSGI_APPLICATION = "piplaces.wsgi.application"
 
 DATABASE_URL = os.getenv("DATABASE_URL")
-if os.getenv("VERCEL") and not DATABASE_URL:
-    raise RuntimeError("Configure DATABASE_URL do Supabase nas variáveis da Vercel.")
 DATABASES = {
     "default": dj_database_url.config(
         default=DATABASE_URL or f"sqlite:///{BASE_DIR / 'db.sqlite3'}",

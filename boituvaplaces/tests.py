@@ -1,3 +1,6 @@
+import os
+from unittest.mock import patch
+
 from django.test import TestCase
 
 from .models import Local, ParadaOnibus, Rota
@@ -25,3 +28,10 @@ class BuscaProximidadesTests(TestCase):
     def test_distancia_em_metros_e_nao_em_graus(self):
         self.assertAlmostEqual(distancia_metros(-23.28, -47.67, -23.28, -47.67), 0)
         self.assertGreater(distancia_metros(-23.28, -47.67, -23.281, -47.67), 100)
+
+    def test_deploy_sem_variaveis_retorna_configuracao_pendente(self):
+        with patch.dict(os.environ, {"VERCEL": "1", "SECRET_KEY": "", "DATABASE_URL": ""}):
+            response = self.client.get("/")
+        self.assertEqual(response.status_code, 503)
+        self.assertContains(response, "SECRET_KEY", status_code=503)
+        self.assertContains(response, "DATABASE_URL", status_code=503)

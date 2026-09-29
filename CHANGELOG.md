@@ -1,5 +1,11 @@
 # Histórico de versões
 
+## 0.2.1 — 29/09/2026 — Correção do build na Vercel
+
+- Removida a exceção de importação de `settings.py` quando as variáveis de produção ainda não foram informadas.
+- Adicionada resposta HTTP 503 com os nomes das variáveis ausentes. Nenhuma consulta ao banco é feita nessa condição.
+- Adicionado teste de regressão para o deploy sem variáveis.
+
 ## 0.2.0 — 29/09/2026 — Preparação para Supabase e Vercel
 
 - Substituído o banco MariaDB local por conexão PostgreSQL via `DATABASE_URL`, com SQLite para desenvolvimento.

@@ -2,7 +2,7 @@
 
 **Projeto:** Navegando pela Cidade Real — Rotas de ônibus por marcos urbanos  
 **Origem:** repositório de Marcos Silveira, importado com histórico Git  
-**Versão documentada:** 0.2.0  
+**Versão documentada:** 0.2.1  
 **Data:** 29/09/2026  
 **Objetivo:** permitir hospedagem do aplicativo Django na Vercel com persistência no PostgreSQL do Supabase.
 
@@ -55,3 +55,7 @@ Em desenvolvimento local, com Python 3.11 e as dependências de `requirements.tx
 O banco Supabase foi criado e o PostGIS está ativo, mas as migrações e a carga de dados ainda exigem a URI PostgreSQL com senha; ela deve ficar apenas no ambiente local e nas variáveis da Vercel. O deploy na Vercel será criado pelo responsável pela conta, que poderá importar o repositório. Até a execução das migrações no Supabase e um teste na URL pública, o funcionamento em produção permanece não verificado.
 
 A migração inicial foi reescrita porque o banco Supabase deste projeto foi criado vazio. Bancos que já tenham aplicado a migração original com `PointField` exigem uma migração de dados específica antes de atualizar.
+
+## 6. Correção 0.2.1 após o primeiro build
+
+O primeiro build na Vercel falhou durante a importação de `piplaces.settings` porque o projeto lançava uma exceção caso `SECRET_KEY` ou `DATABASE_URL` não estivessem disponíveis. A configuração agora pode ser lida na fase de build. Uma requisição em produção sem essas variáveis recebe HTTP 503 com os nomes faltantes, sem tentar acessar o banco. Um terceiro teste automatizado verifica essa condição. O deploy funcional continua dependente de configurar as variáveis e executar a migração e a carga no Supabase.

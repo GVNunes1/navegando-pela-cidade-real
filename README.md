@@ -39,6 +39,8 @@ No painel do Supabase, abra **Connect** e copie a URI PostgreSQL do **Transactio
 3. Execute as migrações e a carga de dados no Supabase antes de testar a busca publicada. É possível usar o mesmo `DATABASE_URL` em uma máquina local para esses comandos.
 4. Abra a URL publicada, busque um local e confira o marco, a parada e as linhas. O painel `/admin/` exige um superusuário criado com `python manage.py createsuperuser`.
 
+Se as variáveis `SECRET_KEY` ou `DATABASE_URL` estiverem ausentes, o build ainda poderá concluir, mas a URL responderá **503 — implantação pendente** até que ambas sejam configuradas e um novo deploy seja feito.
+
 O deploy não executa migrações automaticamente. Isso evita que uma requisição web modifique a estrutura do banco. Os arquivos estáticos do admin são gerados com `collectstatic` no build da Vercel.
 
 ## Dados
